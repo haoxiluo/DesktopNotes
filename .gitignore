@@ -1,0 +1,13 @@
+# 构建产物
+bin/
+obj/
+.sbx/
+
+# VS Code / Rider
+.idea/
+*.user
+*.suo
+
+# 系统文件
+Thumbs.db
+desktop.ini

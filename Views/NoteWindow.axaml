@@ -1,0 +1,114 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DesktopNotes.Views.NoteWindow"
+        Title="便笺"
+        CanResize="True"
+        SystemDecorations="None"
+        ShowInTaskbar="False"
+        MinWidth="220" MinHeight="160"
+        Classes="note-window"
+        Background="{Binding Color, Converter={StaticResource HexBrush}}">
+
+  <Grid RowDefinitions="Auto,*,Auto">
+
+    <!-- ============ 标题栏（可拖动，拖动逻辑在代码里用隧道事件处理） ============ -->
+    <Border x:Name="HeaderBar" Grid.Row="0" Background="#33000000" Cursor="SizeAll">
+      <Grid ColumnDefinitions="*,Auto,Auto">
+        <TextBox x:Name="TitleBox" Text="{Binding Title}" FontSize="14" FontWeight="Bold"
+                 Padding="8,5" Background="Transparent" BorderThickness="0"
+                 VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1" Text="{Binding ReminderCountdown}"
+                   IsVisible="{Binding HasReminder}" VerticalAlignment="Center"
+                   FontSize="11" Opacity="0.8" Margin="4,0,8,0" />
+        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,4,0">
+          <Button Classes="note-btn" Content="…" ToolTip.Tip="更多操作">
+            <Button.Flyout>
+              <MenuFlyout Placement="Bottom">
+                <MenuItem Header="换个颜色" Click="CycleColor_Click" />
+                <MenuItem Header="{Binding ReminderText}" Click="Reminder_Click" />
+                <MenuItem Header="{Binding PinMenuText}" Click="Pin_Click" />
+                <MenuItem Header="{Binding EmbedMenuText}" Click="Embed_Click" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+          <Button Classes="note-btn" Content="—" Click="Hide_Click" ToolTip.Tip="隐藏（在主面板可重新打开）" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- ============ 内容区（按类型切换） ============ -->
+    <Grid Grid.Row="1">
+      <!-- 普通便签 -->
+      <TextBox x:Name="NotePanel" IsVisible="False"
+               Text="{Binding Content}" AcceptsReturn="True"
+               TextWrapping="Wrap" Padding="10" FontSize="14"
+               ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+      <!-- 待办事项 -->
+      <DockPanel x:Name="TodoPanel" IsVisible="False">
+        <Border DockPanel.Dock="Bottom" Padding="8,4,8,8">
+          <TextBox x:Name="TodoInput" Watermark="输入待办事项，回车添加…"
+                   KeyDown="TodoInput_KeyDown" />
+        </Border>
+        <ScrollViewer>
+          <ItemsControl x:Name="TodoList" ItemsSource="{Binding TodoItems}" Margin="8,4">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,2">
+                  <CheckBox IsChecked="{Binding Done}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                  <TextBox Grid.Column="1" Classes="todo-editor" Classes.completed="{Binding Done}"
+                           Text="{Binding Text}" VerticalAlignment="Center"
+                           TextWrapping="Wrap" FontSize="13" />
+                  <TextBlock Grid.Column="1" Classes="todo-display" Classes.completed="{Binding Done}"
+                             Text="{Binding Text}" VerticalAlignment="Center"
+                             TextWrapping="Wrap" FontSize="13" TextDecorations="Strikethrough" />
+                  <Button Grid.Column="2" Classes="note-btn" Content="✕" Click="TodoDelete_Click" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+
+      <!-- 时间轴 -->
+      <DockPanel x:Name="TimelinePanel" IsVisible="False">
+        <Border DockPanel.Dock="Bottom" Padding="8,4,8,8" HorizontalAlignment="Right">
+          <Button Classes="note-btn" Content="＋" Width="32" Height="32" FontSize="20"
+                  Click="TimelineAdd_Click" ToolTip.Tip="新增时间轴条目" />
+        </Border>
+        <ScrollViewer>
+          <ItemsControl x:Name="TimelineList" ItemsSource="{Binding Entries}" Margin="8,4">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border Classes="timeline-entry" Classes.future="{Binding IsFuture}"
+                  CornerRadius="6" Padding="8,4" Margin="0,3"
+                        Cursor="Hand" ToolTip.Tip="双击编辑时间和内容"
+                        DoubleTapped="TimelineEntry_DoubleTapped">
+                  <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                      <TextBlock Text="{Binding Time, StringFormat='yyyy-MM-dd HH:mm:ss'}"
+                                 FontSize="11" Opacity="0.75" VerticalAlignment="Center" />
+                      <Button Grid.Column="1" Classes="note-btn" Content="✕" Click="TimelineDelete_Click" />
+                    </Grid>
+                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="13" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </Grid>
+
+    <!-- ============ 右下角缩放手柄 ============ -->
+    <Border x:Name="ResizeGrip" Grid.Row="2" Width="18" Height="16"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Background="Transparent" Cursor="BottomRightCorner"
+            PointerPressed="Resize_PointerPressed"
+            PointerMoved="Resize_PointerMoved"
+            PointerReleased="Resize_PointerReleased">
+      <TextBlock Text="◢" FontSize="12" Opacity="0.45" HorizontalAlignment="Center" />
+    </Border>
+
+  </Grid>
+</Window>

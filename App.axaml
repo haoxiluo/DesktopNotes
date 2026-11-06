@@ -1,0 +1,64 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:DesktopNotes.Converters"
+             x:Class="DesktopNotes.App"
+             RequestedThemeVariant="Light">
+
+  <Application.Resources>
+    <conv:HexToBrushConverter x:Key="HexBrush" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- 便笺窗口小图标按钮 -->
+    <Style Selector="Button.note-btn">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="6,2" />
+      <Setter Property="MinWidth" Value="28" />
+      <Setter Property="MinHeight" Value="26" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="Button.note-btn:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#33000000" />
+    </Style>
+    <Style Selector="Button.note-btn:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#55000000" />
+    </Style>
+
+    <Style Selector="Border.timeline-entry">
+      <Setter Property="Background" Value="#223A8D6F" />
+    </Style>
+    <Style Selector="Border.timeline-entry.future">
+      <Setter Property="Background" Value="#223C82F6" />
+    </Style>
+
+    <Style Selector="TextBox.todo-editor.completed">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="TextBlock.todo-display">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="TextBlock.todo-display.completed">
+      <Setter Property="IsVisible" Value="True" />
+      <Setter Property="FontStyle" Value="Italic" />
+      <Setter Property="FontWeight" Value="Light" />
+      <Setter Property="Opacity" Value="0.65" />
+    </Style>
+
+    <!-- 便笺内部输入框透明化 -->
+    <Style Selector="Window.note-window TextBox">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <!-- 主窗口样式 -->
+    <Style Selector="Button.primary">
+      <Setter Property="Padding" Value="12,6" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+  </Application.Styles>
+
+</Application>

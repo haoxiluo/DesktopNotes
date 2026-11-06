@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DesktopNotes.Views.ReminderEditWindow"
+        Title="设置提醒"
+        Width="380" Height="210"
+        MinWidth="380" MinHeight="210"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18">
+    <TextBlock Text="提醒时间" FontSize="16" FontWeight="Bold" />
+    <TextBox x:Name="TimeInput" Grid.Row="1" Margin="0,12,0,0"
+             Watermark="yyyy-MM-dd HH:mm"
+             KeyDown="TimeInput_KeyDown" />
+    <TextBlock x:Name="ValidationText" Grid.Row="2" Margin="0,6,0,0"
+               Foreground="#B42318" FontSize="11" IsVisible="False" />
+    <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+      <Button x:Name="ClearButton" Content="清除提醒" HorizontalAlignment="Left"
+              Click="Clear_Click" IsVisible="False" />
+      <Button Grid.Column="1" Content="取消" Click="Cancel_Click" />
+      <Button Grid.Column="2" Content="确定" Click="Save_Click" IsDefault="True" />
+    </Grid>
+  </Grid>
+</Window>
